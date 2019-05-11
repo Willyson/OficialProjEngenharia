@@ -3,25 +3,21 @@
 <head>
 	<title>Menu</title>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/menu.css') }}"/>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/estilo_menu.css') }}" />
   <meta charset="utf-8">
 </head>
 <body> 
 {% block content %}
 <nav class="menu">
 	<ul class="active">
-		<li class="current-item"><a href="#">Home</a></li>
-		<li><a href="#">Cadastro</a></li>
-		<li><a href="#">Pesquisar CEP</a></li>
-		<li><a href="#">Menu</a></li>
-		<li><a href="">Sair</a></li>
+		<li class="current-item"><a href="{{url_for('homeLogin')}}">Home</a></li>
+		<li><a href="#">Usuario</a></li>
+		<li><a href="{{url_for('consultaTorresSites')}}">Torres</a></li>
+		<li><a href="#">Relatórios</a></li>
+		<li><a href="#">Consulta Endereço</a></li>
+		<li><a href="#">Consulta Endereços em Lote</a></li>
+		<li><a href="{{url_for('index')}}">Sair</a></li>
 	</ul>
-
-	<a class="toggle-nav" href="#">&#9776;</a>
-
-	<form class="search-form" action="" method="POST">
-		<input class="search-form-a" type="text" name="exemplo" />
-		<input class="search-form-b" type="submit" name="enviar" value="Enviar" />
-	</form>	
 </nav>
 {% endblock %}
 </body>

@@ -23,6 +23,11 @@ def paginaCadastroUsuario():
 # NA VERDADE ISSO FAZ PARTE DO CONTROLLER DO USUARIO
 @app.route('/cadastro', methods=['POST'])
 def controllerCadastroUsuario():
+
+    #==================================================
+    #DADOS DO USUÁRIO VINDOS DO FORMULARIO DE CADASTRO
+    #==================================================
+
     nome = request.form.get('nome')
     email = request.form.get('email')
     senha = request.form.get('senha')
@@ -31,7 +36,9 @@ def controllerCadastroUsuario():
     tipo = request.form.get('tipo')
     rg = request.form.get('rg')
 
+    #=====================
     ## ENDERECO DO USUARIO
+    #=====================
 
     cep = request.form.get('cep')
     bairro = request.form.get('bairro')
@@ -40,8 +47,9 @@ def controllerCadastroUsuario():
 
     usuarioEndereco = enderecoModel.Endereco(cep, bairro, cidade, uf)
 
-    ##
-    
+  
+    ## CRIA USUARIO
+
     NovoUsuario = usuarioModel.Usuario()
     NovoUsuario.criaUsuarioCompleto(nome, email, senha, cpf, rg, telefone, tipo, '1', usuarioEndereco)
 
@@ -49,7 +57,10 @@ def controllerCadastroUsuario():
     
 #------------------------------------------------------
 
+#=======================
 #REALIZA LOGIN 
+#=======================
+
 '''
     Rota para o sistema validar se o tipo de login é Comum ou Administrador
 
@@ -58,6 +69,9 @@ def controllerCadastroUsuario():
 '''
 @app.route('/login', methods=['POST'])
 def loginUsuario():
+
+    #DADOS PARA O LOGIN
+
     email = request.form.get('email')
     senha = request.form.get('senha')
 
@@ -72,9 +86,26 @@ def loginUsuario():
 
 ###############################################################
 
+
+
+
+## ================
+## Página pós login 
+## ================
+
+
 @app.route('/home')
 def homeLogin():
     return render_template('home.html')
+
+
+
+@app.route('/consultaTorresSites')
+def consultaTorresSites():
+    return render_template('consultaTorresSites.html')
+
+
+
 
 
 

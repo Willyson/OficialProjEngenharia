@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Consulta de Torres</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/menu.css') }}"/>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/estilo_menu.css') }}" />
+        <meta charset="utf-8">
+    </head>
+    <body>
+
+        <nav class="menu">
+            <ul class="active">
+                <li class="current-item"><a href="{{url_for('homeLogin')}}">Home</a></li>
+                <li><a href="#">Usuario</a></li>
+                <li><a href="{{url_for('consultaTorresSites')}}">Torres</a></li>
+                <li><a href="#">Relatórios</a></li>
+                <li><a href="#">Consulta Endereço</a></li>
+                <li><a href="#">Consulta Endereços em Lote</a></li>
+                <li><a href="{{url_for('index')}}">Sair</a></li>
+            </ul>
+        
+        </nav>
+
+        <div>
+            <table>
+                {% for user in range(20) %}
+                    <li><a href="#">{{ user }}</a></li>
+                {% endfor %}
+            </table>
+        </div>
+
+    </body>
+</html>
