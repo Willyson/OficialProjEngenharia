@@ -8,8 +8,11 @@ def novaConexao(self):
 
 class Usuario:
 
-    def __init__(self, nome, email, senha, cpf, rg, telefone, tipo, status, enderecoUsuario):
+    def __init__(self):
+        pass
+        
 
+    def criaUsuarioCompleto(self, nome, email, senha, cpf, rg, telefone, tipo, status, enderecoUsuario):
         self.nome = nome
         self.email = email
         self.senha = senha
@@ -19,6 +22,12 @@ class Usuario:
         self.tipo = tipo
         self.status = status
         self.enderecoUsuario = enderecoUsuario
+        return Usuario()
+
+    def criaUsuarioLogin(self, email, senha):
+        self.email = email
+        self.senha = senha
+        return Usuario()
 
     def __repr__(self):
         return f'Usuario (nome={self.nome}; email={self.email}; senha={self.senha}; cpf={self.cpf}; rg={self.rg}; telefone={self.telefone}; tipo={self.tipo}; status={self.status};)'
@@ -46,10 +55,10 @@ class Usuario:
 
         
     #VERIFICA SE O USUÁRIO ESTÁ CADASTRADO NO SISTEMA 
-    def consultaUsuario(self, email, senha):
+    def consultaUsuario(self, usuarioLogin):
         conexao = novaConexao(self)
         cursor = conexao.cursor()
-        cursor.execute(f"SELECT * FROM VW_SELECIONA_USUARIO WHERE EMAIL_USUARIO = '{email}' AND SENHA_USUARIO = '{senha}'")
+        cursor.execute(f"SELECT * FROM VW_SELECIONA_USUARIO WHERE EMAIL_USUARIO = '{usuarioLogin.email}' AND SENHA_USUARIO = '{usuarioLogin.senha}'")
         user = cursor.fetchall()
         return user
         

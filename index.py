@@ -42,8 +42,9 @@ def controllerCadastroUsuario():
 
     ##
     
-    NovoUsuario = usuarioModel.Usuario(nome, email, senha, cpf, rg, telefone, tipo, 1, usuarioEndereco)
- 
+    NovoUsuario = usuarioModel.Usuario()
+    NovoUsuario.criaUsuarioCompleto(nome, email, senha, cpf, rg, telefone, tipo, '1', usuarioEndereco)
+
     return NovoUsuario.validaDadosUsuario(NovoUsuario)
     
 #------------------------------------------------------
@@ -60,14 +61,22 @@ def loginUsuario():
     email = request.form.get('email')
     senha = request.form.get('senha')
 
-    userLogin = usuarioModel.Usuario.usuario()
-    
-    logado = userLogin.consultaUsuario(email, senha)
+    userLogin = usuarioModel.Usuario() 
+    userLogin.criaUsuarioLogin(email, senha)
 
-    #return userLogin.consultaUsuario(userLogin)
+    if(len(userLogin.consultaUsuario(userLogin)) > 0):
+         return redirect('/home')
+    else:
+         return redirect('/')
 
 
 ###############################################################
+
+@app.route('/home')
+def homeLogin():
+    return render_template('home.html')
+
+
 
 ## INICIA A APLICAÇÃO 
 if __name__ == '__main__':
