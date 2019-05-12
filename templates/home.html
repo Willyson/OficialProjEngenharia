@@ -1,24 +1,37 @@
-<!DOCTYPE>
+<!DOCTYPE HTML>
 <html>
-<head>
-	<title>Menu</title>
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/menu.css') }}"/>
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/estilo_menu.css') }}" />
-  <meta charset="utf-8">
-</head>
-<body> 
-{% block content %}
-<nav class="menu">
-	<ul class="active">
-		<li class="current-item"><a href="{{url_for('homeLogin')}}">Home</a></li>
-		<li><a href="#">Usuario</a></li>
-		<li><a href="{{url_for('consultaTorresSites')}}">Torres</a></li>
-		<li><a href="#">Relatórios</a></li>
-		<li><a href="#">Consulta Endereço</a></li>
-		<li><a href="#">Consulta Endereços em Lote</a></li>
-		<li><a href="{{url_for('index')}}">Sair</a></li>
-	</ul>
-</nav>
-{% endblock %}
-</body>
+
+	<head>
+		<title>Validador de área de Cobertura</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<meta charset="utf-8">
+	</head>
+
+	<body> 
+		<div class="container-fluid">
+			<ul class="nav justify-content-center">
+				<li class="nav-item">
+					<a href="{{url_for('homeLogin')}}" class="nav-link active">Home</a>
+				</li>
+				<li class="nav-item">
+					<a href="{{url_for('consultaUsuarios')}}" class="nav-link active">Usuário</a>
+				</li>
+				<li class="nav-item">
+					<a href="{{url_for('consultaTorresSites')}}" class="nav-link active">Torres</a>
+				</li>
+				<li class="nav-item">
+					<a href="#" class="nav-link active">Relatórios</a>
+				</li>
+				<li class="nav-item">
+					<a href="{{url_for('consultaEndereco')}}" class="nav-link active">Consulta Endereço</a>
+				</li>
+				<li class="nav-item">
+					<a href="#" class="nav-link active">Consulta Endereços em Lote</a>
+				</li>
+				<li class="nav-item">
+					<a href="{{url_for('index')}}" class="nav-link active">Sair</a>
+				</li>
+			</ul>
+		</div>
+	</body>
 </html>

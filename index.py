@@ -1,32 +1,50 @@
 from flask import Flask, render_template, request, url_for, redirect
-from model import usuarioModel, enderecoModel
+from model import usuarioModel, enderecoModel, torreModel
+from geopy.geocoders import GoogleV3
+from math import radians, sin, cos, asin, sqrt, atan, degrees
 
 
 app = Flask(__name__)
 
-#PAGINA INICIAL 
+## ====================================
+## Página inicial para login do usuário
+## ====================================
+
 @app.route('/')
 def index():
     return render_template('login.html')
     
 
-#PAGINA DE CADASTRO DO USUARIO COMUM
+
+
+
+
+
+## =============================
+## Render do cadastro do usuário
+## =============================
+
 @app.route('/cadastro')
 def paginaCadastroUsuario():
     return render_template('cadastro.html')
 
-''' 
-    Rota para cadastro de usuário comum
-    Neste caso será sempre marcado para o tipo comum de usuário, último parâmetro do objeto Usuario
 
-'''
+
+
+
+
+
+
+
+
+
 # NA VERDADE ISSO FAZ PARTE DO CONTROLLER DO USUARIO
 @app.route('/cadastro', methods=['POST'])
 def controllerCadastroUsuario():
 
-    #==================================================
-    #DADOS DO USUÁRIO VINDOS DO FORMULARIO DE CADASTRO
-    #==================================================
+    ## ==================================================
+    ## Recupera dados do formulário 
+    ## ==================================================
 
     nome = request.form.get('nome')
     email = request.form.get('email')
@@ -36,9 +54,9 @@ def controllerCadastroUsuario():
     tipo = request.form.get('tipo')
     rg = request.form.get('rg')
 
-    #=====================
-    ## ENDERECO DO USUARIO
-    #=====================
+    ## =====================
+    ## Endereço do usuário
+    ## =====================
 
     cep = request.form.get('cep')
     bairro = request.form.get('bairro')
@@ -47,26 +65,25 @@ def controllerCadastroUsuario():
 
     usuarioEndereco = enderecoModel.Endereco(cep, bairro, cidade, uf)
 
-  
-    ## CRIA USUARIO
+    ## =================
+    ## Cria novo usuário
+    ## =================
 
     NovoUsuario = usuarioModel.Usuario()
     NovoUsuario.criaUsuarioCompleto(nome, email, senha, cpf, rg, telefone, tipo, '1', usuarioEndereco)
 
     return NovoUsuario.validaDadosUsuario(NovoUsuario)
     
-#------------------------------------------------------
 
-#=======================
-#REALIZA LOGIN 
-#=======================
 
-'''
-    Rota para o sistema validar se o tipo de login é Comum ou Administrador
 
-    Deve pegar o e-mail e senha informado pela interface e localizar se existe na base de dados. 
 
-'''
+
+
+## =======================
+## REALIZA LOGIN 
+## =======================
+
 @app.route('/login', methods=['POST'])
 def loginUsuario():
 
@@ -84,7 +101,9 @@ def loginUsuario():
          return redirect('/')
 
 
-###############################################################
+
+
+
 
 
 
@@ -93,20 +112,156 @@ def loginUsuario():
 ## Página pós login 
 ## ================
 
-
 @app.route('/home')
 def homeLogin():
     return render_template('home.html')
 
 
 
+
+
+
+
+## ======================
+## Retorna torres da base 
+## ======================
+
 @app.route('/consultaTorresSites')
 def consultaTorresSites():
-    return render_template('consultaTorresSites.html')
+    torres = torreModel.Torre()
+    return render_template('consultaTorresSites.html', torres = torres.retornaTorres())
 
 
 
 
+
+
+
+## ==============================
+## Retorna todos usuários da base
+##===============================
+
+@app.route('/consultaUsuarios')
+def consultaUsuarios():
+    U = usuarioModel.Usuario()
+    return render_template('consultaUsuarios.html', usuarios = U.consultaUsuarios())
+
+
+
+## ============================
+## Tela de pesquisa de endereço 
+## ============================
+
+@app.route('/consultaEndereco')
+def consultaEndereco():
+    return render_template('consultaEndereco.html')
+
+
+
+
+## ===================
+## Funções necessárias
+## ===================
+
+
+def areaInside(a, b, c, d):
+    # Formula de Haversine
+    
+    # Constante que definirá o raio da terra em km
+    r = 6371
+
+    # Converte coordenadas de graus para radianos
+    lat1, lon1, lat2, lon2 = map(radians, [ float(a), float(b), float(c), float(d) ] )
+
+    # Formula de Haversine
+    dlat = lat2 - lat1 
+    dlon = lon2 - lon1
+    hav = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon/2) ** 2
+    distancia = 2 * r * asin( sqrt(hav) )
+
+    if distancia <= 1.5:
+        return True
+    else:
+        return False
+
+
+
+
+def azi(a, b, c, d):
+    # Converte coordenadas de graus para radianos
+    lat1, lon1, lat2, lon2 = map(radians, [ float(a), float(b), float(c), float(d) ] )
+
+    # Formula de Haversine
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+
+    azimute = atan(dlat/dlon)
+    return degrees(azimute)
+
+
+
+
+
+
+
+
+@app.route('/consultaEndereco', methods=['POST'])
+def retornaLocalizacao():
+
+    # Recebe a informação do formulário de pesquisa
+    geolocator = GoogleV3(api_key='AIzaSyDLxvmCIqDmidp84dgKwXemApra3XtUhUE')
+    location = geolocator.geocode(str(request.form.get('enderecoPesquisa')))
+    
+    # Recebe as torres 
+    tower = torreModel.Torre().retornaTorresPesquisaEnd()
+
+    #Recebe antenas
+    antenas = torreModel.Torre().retornaAntenasPesquisaEnd()
+
+    saida = {}
+    
+    for j, i in enumerate(tower):   
+        if areaInside(location.latitude, location.longitude, i[0], i[1]) == True:
+            if j == 0:
+                for k in antenas[0:3]:
+                    azimute = azi(location.latitude, location.longitude, i[0], i[1])
+                    if float(azimute)>=k[1]-32.5 and float(azimute)<=k[1]+32.5:
+                        saida["antena"] = k[0]
+                        saida["retorno"] = 1
+                      
+            if j == 1:
+                for k in antenas[3:6]:
+                    azimute = azi(location.latitude, location.longitude, i[0], i[1])
+                    if float(azimute)>=k[1]-32.5 and float(azimute)<=k[1]+32.5:
+                        saida["antena"] = k[0]
+                        saida["retorno"] = 1
+                    
+            if j == 2:
+                for k in antenas[6:9]:
+                    azimute = azi(location.latitude, location.longitude, i[0], i[1])
+                    if float(azimute)>=k[1]-32.5 and float(azimute)<=k[1]+32.5:
+                        saida["antena"] = k[0]
+                        saida["retorno"] = 1
+                    
+            if j==3:
+                for k in antenas[9:12]:
+                    azimute = azi(location.latitude, location.longitude, i[0], i[1])
+                    if float(azimute)>=k[1]-32.5 and float(azimute)<=k[1]+32.5:
+                        saida["antena"] = k[0]
+                        saida["retorno"] = 1
+        else:
+            saida["retorno"] = 0    
+
+
+    ## =============
+    ## Registra LOG
+    ## =============
+
+    if(torreModel.Torre().registraLogPesquisa(str(location), str(saida["retorno"]))):
+        return "Registrado"
+    else:
+        return "Erro no registro de log"
+    
 
 
 ## INICIA A APLICAÇÃO 

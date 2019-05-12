@@ -62,3 +62,14 @@ class Usuario:
         user = cursor.fetchall()
         return user
         
+
+    # ================================================
+    # Retorna todos os usuários cadastrados no sistema
+    # ================================================
+
+    def consultaUsuarios(self):
+        conexao = novaConexao(self)
+        cursor = conexao.cursor()
+        cursor.execute("SELECT * FROM VW_SELECIONA_USUARIO")
+        users = cursor.fetchall()
+        return users 
