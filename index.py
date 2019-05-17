@@ -63,7 +63,9 @@ def controllerCadastroUsuario():
     cidade = request.form.get('cidade')
     uf = request.form.get('uf')
 
-    usuarioEndereco = enderecoModel.Endereco(cep, bairro, cidade, uf)
+    usuarioEndereco = enderecoModel.Endereco()
+
+    usuarioEndereco = usuarioEndereco.criaEndereco(cep, bairro, cidade, uf)
 
     ## =================
     ## Cria novo usuário
@@ -154,7 +156,10 @@ def consultaUsuarios():
 
 @app.route('/consultaEndereco')
 def consultaEndereco():
-    return render_template('consultaEndereco.html')
+
+    end = enderecoModel.Endereco().retornaEnderecos()
+    
+    return render_template('consultaEndereco.html', logs = end)
 
 
 
@@ -218,7 +223,7 @@ def retornaLocalizacao():
     #Recebe antenas
     antenas = torreModel.Torre().retornaAntenasPesquisaEnd()
 
-    saida = {}
+    saida = {"antena": "", "retorno": 0}
     
     for j, i in enumerate(tower):   
         if areaInside(location.latitude, location.longitude, i[0], i[1]) == True:
@@ -228,6 +233,9 @@ def retornaLocalizacao():
                     if float(azimute)>=k[1]-32.5 and float(azimute)<=k[1]+32.5:
                         saida["antena"] = k[0]
                         saida["retorno"] = 1
+                        break
+                    else:
+                        saida["retorno"] = 0  
                       
             if j == 1:
                 for k in antenas[3:6]:
@@ -235,6 +243,9 @@ def retornaLocalizacao():
                     if float(azimute)>=k[1]-32.5 and float(azimute)<=k[1]+32.5:
                         saida["antena"] = k[0]
                         saida["retorno"] = 1
+                        break
+                    else:
+                        saida["retorno"] = 0  
                     
             if j == 2:
                 for k in antenas[6:9]:
@@ -242,6 +253,9 @@ def retornaLocalizacao():
                     if float(azimute)>=k[1]-32.5 and float(azimute)<=k[1]+32.5:
                         saida["antena"] = k[0]
                         saida["retorno"] = 1
+                        break
+                    else:
+                        saida["retorno"] = 0  
                     
             if j==3:
                 for k in antenas[9:12]:
@@ -249,16 +263,18 @@ def retornaLocalizacao():
                     if float(azimute)>=k[1]-32.5 and float(azimute)<=k[1]+32.5:
                         saida["antena"] = k[0]
                         saida["retorno"] = 1
-        else:
-            saida["retorno"] = 0    
+                        break
+                    else:
+                        saida["retorno"] = 0 
+          
 
 
-    ## =============
-    ## Registra LOG
-    ## =============
+    ## ====================================
+    ## Registra LOG do Endereço consultado
+    ## ====================================
 
     if(torreModel.Torre().registraLogPesquisa(str(location), str(saida["retorno"]))):
-        return "Registrado"
+        return redirect(url_for('consultaEndereco'))
     else:
         return "Erro no registro de log"
     

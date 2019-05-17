@@ -73,3 +73,6 @@ class Usuario:
         cursor.execute("SELECT * FROM VW_SELECIONA_USUARIO")
         users = cursor.fetchall()
         return users 
+
+
+   
