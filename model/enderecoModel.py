@@ -13,16 +13,37 @@ def novaConexao(self):
 
 class Endereco:
 
-    def __init__(self):
-        pass
-        
-    def criaEndereco(self, cep, bairro, cidade, uf):
+    def __init__(self, cep = None, bairro = None, cidade = None, uf = None):
         self.cep = cep 
         self.bairro = bairro 
         self.cidade = cidade 
         self.uf = uf 
-        return Endereco 
     
+    def setCep(self, cep):
+        self.cep = cep 
+    
+    def getCep(self):
+        return self.cep
+
+    def setBairro(self, bairro):
+        self.bairro = bairro
+    
+    def getBairro(self):
+        return self.bairro
+
+    def setCidade(self, cidade):
+        self.cidade = cidade
+
+    def getCidade(self):
+        return self.cidade
+
+    def setUf(self, uf):
+        self.uf = uf
+
+    def getUf(self):
+        return self.uf 
+    
+       
     def retornaEnderecos(self):
         conexao = novaConexao(self)
         cursor = conexao.cursor()

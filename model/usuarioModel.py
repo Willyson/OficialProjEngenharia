@@ -8,11 +8,7 @@ def novaConexao(self):
 
 class Usuario:
 
-    def __init__(self):
-        pass
-        
-
-    def criaUsuarioCompleto(self, nome, email, senha, cpf, rg, telefone, tipo, status, enderecoUsuario):
+    def __init__(self, nome = None, email = None, senha = None, cpf = None, rg = None, telefone = None, tipo = None, status = None, enderecoUsuario = None):
         self.nome = nome
         self.email = email
         self.senha = senha
@@ -22,7 +18,57 @@ class Usuario:
         self.tipo = tipo
         self.status = status
         self.enderecoUsuario = enderecoUsuario
-        return Usuario()
+        
+    ## ============
+    ## Gets e Sets
+    ## ============
+  
+    def setNome(self, nome):
+        self.nome = nome
+    def getNome(self):
+        return self.nome
+    
+    def setEmail(self, email):
+        self.email = email
+    def getEmail(self):
+        return self.email
+
+    def setSenha(self, senha):
+        self.senha = senha
+    def getSenha(self):
+        return self.senha
+
+    def setCpf(self, cpf):
+        self.cpf = cpf
+    def getCpf(self):
+        return self.cpf
+
+    def setRg(self, rg):
+        self.rg = rg
+    def getRg(self):
+        return self.rg
+
+    def setTelefone(self, telefone):
+        self.telefone = telefone
+    def getTelefone(self):
+        return self.telefone
+
+    def setTipo(self, tipo):
+        self.tipo = tipo
+    def getTipo(self):
+        return self.tipo
+
+    def setStatus(self, status):
+        self.status = status
+    def getStatus(self):
+        return self.status
+
+    def setEnderecoUsuario(self, enderecoUsuario):
+        self.enderecoUsuario = enderecoUsuario
+    def getEnderecoUsuario(self):
+        return self.enderecoUsuario
+
+
 
     def criaUsuarioLogin(self, email, senha):
         self.email = email
@@ -37,21 +83,26 @@ class Usuario:
     #VALIDAÇÃO DO NOVO USUARIO 
     def validaDadosUsuario(self, usuario):
 
-        if(len(usuario.nome) == 0 or len(usuario.email) == 0):
+        if(len(usuario.getNome()) == 0 or len(usuario.getEmail()) == 0):
             return "Usuário com nome ou e-mail zero"
         elif(len(usuario.senha) < 3):
             return "Senha com menos que 3 caracteres"
         else:
             return usuario.cadastraUsuario(usuario)
+            
+            
 
     #CADASTRO EFETIVO  DE USUÁRIO E ENDEREÇO DO USUÁRIO 
     def cadastraUsuario(self, novoUsuario):
         conexao = novaConexao(self)
         cursor = conexao.cursor()
-        cursor.execute(f"INSERT INTO USUARIO (CPF_USUARIO, NOME_USUARIO, RG_USUARIO, EMAIL_USUARIO, SENHA_USUARIO, STATUS_USUARIO, ID_TIPO_CONTA) VALUES ('{novoUsuario.cpf}', '{novoUsuario.nome}', '{novoUsuario.rg}', '{novoUsuario.email}', '{novoUsuario.senha}', '{novoUsuario.status}', '{novoUsuario.tipo}')")
-        cursor.execute(f"INSERT INTO ENDERECO (CEP_ENDERECO, BAIRRO_ENDERECO, CIDADE_ENDERECO, UF_ENDERECO, ID_USUARIO) VALUES ('{novoUsuario.enderecoUsuario.cep}','{novoUsuario.enderecoUsuario.bairro}','{novoUsuario.enderecoUsuario.cidade}','{novoUsuario.enderecoUsuario.uf}',(SELECT ID_USUARIO FROM USUARIO ORDER BY 1 DESC LIMIT 1))")
+        cursor.execute(f"INSERT INTO USUARIO (CPF_USUARIO, NOME_USUARIO, RG_USUARIO, EMAIL_USUARIO, SENHA_USUARIO, STATUS_USUARIO, ID_TIPO_CONTA) VALUES ('{novoUsuario.getCpf()}', '{novoUsuario.getNome()}', '{novoUsuario.getRg()}', '{novoUsuario.getEmail()}', '{novoUsuario.getSenha()}', '{novoUsuario.getStatus()}', '{novoUsuario.getTipo()}')")
+        cursor.execute(f"INSERT INTO ENDERECO (CEP_ENDERECO, BAIRRO_ENDERECO, CIDADE_ENDERECO, UF_ENDERECO, ID_USUARIO) VALUES ('{novoUsuario.enderecoUsuario.getCep()}','{novoUsuario.enderecoUsuario.getBairro()}','{novoUsuario.enderecoUsuario.getCidade()}','{novoUsuario.enderecoUsuario.getUf()}',(SELECT ID_USUARIO FROM USUARIO ORDER BY 1 DESC LIMIT 1))")
         conexao.commit()
-        return redirect('/')
+        if (int(novoUsuario.getTipo()) == 1):
+            return redirect('consultaUsuarios')
+        else:
+            return redirect('/')
 
         
     #VERIFICA SE O USUÁRIO ESTÁ CADASTRADO NO SISTEMA 

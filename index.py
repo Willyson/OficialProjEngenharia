@@ -63,16 +63,13 @@ def controllerCadastroUsuario():
     cidade = request.form.get('cidade')
     uf = request.form.get('uf')
 
-    usuarioEndereco = enderecoModel.Endereco()
+    usuarioEndereco = enderecoModel.Endereco(cep, bairro, cidade, uf)
 
-    usuarioEndereco = usuarioEndereco.criaEndereco(cep, bairro, cidade, uf)
+    # ## =================
+    # ## Cria novo usuário
+    # ## =================
 
-    ## =================
-    ## Cria novo usuário
-    ## =================
-
-    NovoUsuario = usuarioModel.Usuario()
-    NovoUsuario.criaUsuarioCompleto(nome, email, senha, cpf, rg, telefone, tipo, '1', usuarioEndereco)
+    NovoUsuario = usuarioModel.Usuario(nome, email, senha, cpf, rg, telefone, tipo, '1', usuarioEndereco)
 
     return NovoUsuario.validaDadosUsuario(NovoUsuario)
     
@@ -157,7 +154,8 @@ def consultaUsuarios():
 @app.route('/consultaEndereco')
 def consultaEndereco():
 
-    end = enderecoModel.Endereco().retornaEnderecos()
+    end = enderecoModel.Endereco()
+    end = end.retornaEnderecos()
     
     return render_template('consultaEndereco.html', logs = end)
 

@@ -28,9 +28,11 @@
 						<input type="text" placeholder="CEP" name="cep" class="form-control" />
 						<input type="text" placeholder="Bairro" name="bairro" class="form-control" />
 						<input type="text" placeholder="Cidade" name="cidade" class="form-control" />
-						<input type="text" placeholder="UF" name="uf" class="form-control" />
+						<input type="text" placeholder="UF" name="uf" class="form-control" maxlength="2"/>
 
-						<input type="hidden" value="1" name="tipo" class="form-control"/>
+						<select class="form-control" name="tipo" disabled>
+							<option value="2">Comum</option>
+						</select>
 						<input type="submit" value="Cadastrar" id="btnEnviar" class="btn btn-primary btn-lg btn-block">
 						
 						<p class="message">
