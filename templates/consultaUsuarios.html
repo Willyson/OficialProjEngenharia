@@ -4,13 +4,12 @@
         <title>Usuários cadastrados</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+        <link rel="stylesheet" href="../static/css/consultaUsuario.css">
     </head>
     <body>
-        <div class="container-fluid">
-            <ul class="nav justify-content-center">
+        <div class="">
+            <ul class="navbar justify-content-center">
                 <li class="nav-item">
                     <a href="{{url_for('homeLogin')}}" class="nav-link active">Home</a>
                 </li>
@@ -29,13 +28,19 @@
                 <li class="nav-item">
                     <a href="#" class="nav-link active">Consulta Endereços em Lote</a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{url_for('index')}}" class="nav-link active">Sair</a>
-                </li>
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                      <div class="buttons">
+                        <a href="{{url_for('index')}}" class="button is-primary">
+                          <strong>Sair</strong>
+                        </a>
+                      </div>
+                    </div>
+                </div>
             </ul>
 
             <div class="table-responsive">
-                <table class="table table-bordered">
+                <table class="table">
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col">ID</th>
@@ -45,13 +50,13 @@
                             <th scope="col">Senha</th>
                             <th scope="col">Status</th>
                             <th scope="col">Conta</th>
-                            <th scope="col">Alterar</th>
-                            <th scope="col">Excluir</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <thbody>
                         {% for usuario in usuarios %}
-                            <tr>
+                            <tr class="body-table">
                                 {% for u in usuario %}
                                     {% if usuario[0] %}
                                         <td scope="row">{{ u }}</td>
@@ -60,10 +65,10 @@
                                     {% endif %}
                                 {% endfor %}
                                     <td>
-                                        <i class="material-icons" value="1">settings</i>
+                                        <a class="button is-warning">Alterar</a>
                                     </td>
                                 <td>
-                                    <a href="" ><i class="material-icons">delete</i></a>
+                                    <a class="button is-danger">Apagar</a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -73,7 +78,9 @@
 
         </div>
         <!-- Modal de cadastro de usuário -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Novo Usuário</button>
+        <div class="button-container">
+            <button type="button" class="button is-link" data-toggle="modal" data-target=".bd-example-modal-lg">Novo Usuário</button>
+        </div>
 
         <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -120,4 +127,7 @@
         </div>
 
     </body>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </html>
