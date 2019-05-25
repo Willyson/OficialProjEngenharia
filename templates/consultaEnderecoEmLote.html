@@ -28,51 +28,20 @@
                     <a href="{{url_for('consultaEndereco')}}" class="nav-link active">Consulta Endereço</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link active">Consulta Endereços em Lote</a>
+                    <a href="{{url_for('consultaEnderecoEmLote')}}" class="nav-link active">Consulta Endereços em Lote</a>
                 </li>
                 <li class="nav-item">
                     <a href="{{url_for('index')}}" class="nav-link active">Sair</a>
                 </li>
             </ul>
-            
-            <div class="container">
-                <form action="{{url_for('retornaLocalizacao')}}" method="POST">
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col">
-                                <input type="text" name="enderecoPesquisa" class="form-control" id="enderecoPesquisa" autofocus placeholder="Endereço ou CEP" required/>
-                            </div>
-                            <div class="col">
-                                <input type="submit" class="btn btn-primary" />
-                            </div>
-                        </div>    
-                    </div>
+
+            <div>
+                <h3>Importação de arquivo CSV</h3>
+                <form action="" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="arqImportacao" >
+                    <input type="submit" value="Importar" />
                 </form>
             </div>
-            
-            <table class="table table-bordered">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Localização</th>
-                        <th>Retorno</th>
-                        <th>Data da Consulta</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for linha in logs %}
-                        {% if linha[1] == "ENDEREÇO NÃO VÁLIDO" %}
-                            <tr class="table-danger">
-                        {% else %}
-                            <tr class="table-success">
-                        {% endif %}
-
-                            {% for dado in linha%}
-                                <td>{{ dado }}</td>
-                            {% endfor%}
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
             
         </div> 
     </body>

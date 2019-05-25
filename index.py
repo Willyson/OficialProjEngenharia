@@ -2,9 +2,15 @@ from flask import Flask, render_template, request, url_for, redirect
 from model import usuarioModel, enderecoModel, torreModel
 from geopy.geocoders import GoogleV3
 from math import radians, sin, cos, asin, sqrt, atan, degrees
+from werkzeug.utils import secure_filename
+import os
+
+UPLOAD_FOLDER = '/app/uploads'
+ALLOWED_EXTENSIONS = set(['csv'])
 
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 ## ====================================
 ## Página inicial para login do usuário
@@ -278,6 +284,24 @@ def retornaLocalizacao():
     
 
 
+## =========================
+## Consulta Endereço em Lote
+## =========================
+
+@app.route('/consultaEnderecoEmLote')
+def consultaEnderecoEmLote():
+    return render_template("consultaEnderecoEmLote.html")
+
+@app.route('/consultaEnderecoEmLote', methods=['POST'])
+def importaEnderecoEmLote():
+
+    arquivo = request.files['arqImportacao']
+    
+    arquivo.save(os.path.join(app.config['UPLOAD_FOLDER'], arquivo))
+
+    return ""
+    
+    
 ## INICIA A APLICAÇÃO 
 if __name__ == '__main__':
     app.run(debug=True)
