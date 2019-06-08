@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, url_for, redirect
-from model import usuarioModel, enderecoModel, torreModel
+from model import usuarioModel, enderecoModel, torreModel, importacaoModel
 from geopy.geocoders import GoogleV3
 from math import radians, sin, cos, asin, sqrt, atan, degrees
 from werkzeug.utils import secure_filename
 import os
+import csv, sys
 
 UPLOAD_FOLDER = '/app/uploads'
 ALLOWED_EXTENSIONS = set(['csv'])
@@ -290,14 +291,84 @@ def retornaLocalizacao():
 
 @app.route('/consultaEnderecoEmLote')
 def consultaEnderecoEmLote():
+    
     return render_template("consultaEnderecoEmLote.html")
 
 @app.route('/consultaEnderecoEmLote', methods=['POST'])
 def importaEnderecoEmLote():
 
+    #API do Google 
+    geolocator = GoogleV3(api_key='AIzaSyDLxvmCIqDmidp84dgKwXemApra3XtUhUE')
+
+    # Chama o arquivo e retorna o conteudo 
     arquivo = request.files['arqImportacao']
-    
-    arquivo.save(os.path.join(app.config['UPLOAD_FOLDER'], arquivo))
+    conteudo = arquivo.readlines()
+
+    saida = {"antena": "", "retorno": 0}
+
+    # Registra o log de importacao 
+    importacaoModel.Importacao.registraImportacao(None, arquivo.filename)
+
+    saida2 = ""
+
+
+    # Recebe as torres 
+    tower = torreModel.Torre().retornaTorresPesquisaEnd()
+
+    #Recebe antenas
+    antenas = torreModel.Torre().retornaAntenasPesquisaEnd()
+
+    #Para cada linha será feita a pesquisa do CEP formatado
+    for linha in conteudo:
+        cep = str(linha)[2:10] + " "
+
+         # Recebe o cep vindo de conteudo
+        location = geolocator.geocode(cep)
+        
+
+        for j, i in enumerate(tower):   
+            if areaInside(location.latitude, location.longitude, i[0], i[1]) == True:
+                if j == 0:
+                    for k in antenas[0:3]:
+                        azimute = azi(location.latitude, location.longitude, i[0], i[1])
+                        if float(azimute)>=k[1]-32.5 and float(azimute)<=k[1]+32.5:
+                            saida["antena"] = k[0]
+                            saida["retorno"] = 1
+                            break
+                        else:
+                            saida["retorno"] = 0  
+                      
+                if j == 1:
+                    for k in antenas[3:6]:
+                        azimute = azi(location.latitude, location.longitude, i[0], i[1])
+                        if float(azimute)>=k[1]-32.5 and float(azimute)<=k[1]+32.5:
+                            saida["antena"] = k[0]
+                            saida["retorno"] = 1
+                            break
+                        else:
+                            saida["retorno"] = 0  
+                        
+                if j == 2:
+                    for k in antenas[6:9]:
+                        azimute = azi(location.latitude, location.longitude, i[0], i[1])
+                        if float(azimute)>=k[1]-32.5 and float(azimute)<=k[1]+32.5:
+                            saida["antena"] = k[0]
+                            saida["retorno"] = 1
+                            break
+                        else:
+                            saida["retorno"] = 0  
+                        
+                if j==3:
+                    for k in antenas[9:12]:
+                        azimute = azi(location.latitude, location.longitude, i[0], i[1])
+                        if float(azimute)>=k[1]-32.5 and float(azimute)<=k[1]+32.5:
+                            saida["antena"] = k[0]
+                            saida["retorno"] = 1
+                            break
+                        else:
+                            saida["retorno"] = 0
+            
+        importacaoModel.Importacao.registraLogEnderecoImportacao(None, location, saida["retorno"])
 
     return ""
     
