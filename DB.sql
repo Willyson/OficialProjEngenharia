@@ -164,6 +164,21 @@ ORDER BY ANS.STATUS_ANTENA, TS.ID_TORRE
 
 
 
+
+ -- ================================================
+ -- Estrutura de Importação de consulta de endereço 
+ -- ================================================
+ 
+ CREATE TABLE IF NOT EXISTS `DB_LOCALIZA`.`IMPORTACAO`
+ (
+	`ID_IMPORTACAO`           INT NOT NULL AUTO_INCREMENT,
+	`NOME_ARQUIVO_IMPORTADO`  VARCHAR(100) NULL, 
+	`DATA_IMPORTACAO`         DATETIME,
+	
+	PRIMARY KEY (ID_IMPORTACAO)
+ );
+
+
  -- =========================================
  -- Estrutura de Log de consulta de endereço
  -- =========================================
@@ -174,10 +189,14 @@ ORDER BY ANS.STATUS_ANTENA, TS.ID_TORRE
    `LOCALIZACAO` VARCHAR(250) NULL, 
    `RETORNO` TINYINT NULL, 
    `DATA_CONSULTA` DATETIME NULL,
-   PRIMARY KEY (ID_LOG)
+   `ID_IMPORTACAO` INT NULL,
+   
+   PRIMARY KEY (ID_LOG),
+   CONSTRAINT `FK_LOG_CONSULTA_ENDERECO_ID_IMPORTACAO` FOREIGN KEY (ID_IMPORTACAO) REFERENCES `DB_LOCALIZA`.`IMPORTACAO` (ID_IMPORTACAO)
 
- )
+ );
  
+
  
  
  
@@ -192,6 +211,7 @@ SELECT
     END AS RETORNO
     ,DATE_FORMAT(DATA_CONSULTA, '%d/%m/%Y %H:%i:%s') AS DATA_CONSULTA
 FROM LOG_CONSULTA_ENDERECO
+WHERE ID_IMPORTACAO IS NULL
 ORDER BY DATA_CONSULTA DESC;
 
 
