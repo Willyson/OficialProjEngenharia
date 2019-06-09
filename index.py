@@ -79,9 +79,6 @@ def controllerCadastroUsuario():
     NovoUsuario = usuarioModel.Usuario(nome, email, senha, cpf, rg, telefone, tipo, '1', usuarioEndereco)
 
     return NovoUsuario.validaDadosUsuario(NovoUsuario)
-    
-
-
 
 
 
@@ -89,7 +86,7 @@ def controllerCadastroUsuario():
 ## =======================
 ## REALIZA LOGIN 
 ## =======================
-tipoUsuario = ""
+
 
 @app.route('/login', methods=['POST'])
 def loginUsuario():
@@ -103,10 +100,11 @@ def loginUsuario():
     userLogin.criaUsuarioLogin(email, senha)
 
     usuario = userLogin.consultaUsuario(userLogin)
-    tipoUsuario = usuario[0][6]
+
+    session['tipoUsuario'] = usuario[0][6]
 
     if(len(usuario) > 0):
-        return render_template('menu.html', tu = tipoUsuario)
+        return render_template('menu.html', tu = session['tipoUsuario'])
     else:
          return redirect('/')
 
@@ -310,7 +308,7 @@ def importaEnderecoEmLote():
     # Registra o log de importacao 
     importacaoModel.Importacao.registraImportacao(None, arquivo.filename)
 
-    saida2 = ""
+ 
 
 
     # Recebe as torres 
