@@ -35,7 +35,11 @@ class Importacao:
 
     # Retorna as importações do lote 
     def retornaImportacoes(self):
-        return ""
+        conexao = novaConexao(self)
+        cursor =  conexao.cursor()
+        cursor.execute(f"SELECT * FROM VW_CONSULTA_IMPORTACOES")
+        logs = cursor.fetchall()
+        return logs
 
     # Retorna endereços das importações
     

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect, session
 from model import usuarioModel, enderecoModel, torreModel, importacaoModel
 from geopy.geocoders import GoogleV3
 from math import radians, sin, cos, asin, sqrt, atan, degrees
@@ -11,7 +11,7 @@ ALLOWED_EXTENSIONS = set(['csv'])
 
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.secret_key = os.urandom(24)
 
 ## ====================================
 ## Página inicial para login do usuário
@@ -89,6 +89,7 @@ def controllerCadastroUsuario():
 ## =======================
 ## REALIZA LOGIN 
 ## =======================
+tipoUsuario = ""
 
 @app.route('/login', methods=['POST'])
 def loginUsuario():
@@ -101,15 +102,13 @@ def loginUsuario():
     userLogin = usuarioModel.Usuario() 
     userLogin.criaUsuarioLogin(email, senha)
 
-    if(len(userLogin.consultaUsuario(userLogin)) > 0):
-         return redirect('/home')
+    usuario = userLogin.consultaUsuario(userLogin)
+    tipoUsuario = usuario[0][6]
+
+    if(len(usuario) > 0):
+        return render_template('menu.html', tu = tipoUsuario)
     else:
          return redirect('/')
-
-
-
-
-
 
 
 
@@ -291,8 +290,10 @@ def retornaLocalizacao():
 
 @app.route('/consultaEnderecoEmLote')
 def consultaEnderecoEmLote():
-    
-    return render_template("consultaEnderecoEmLote.html")
+
+    Logs = importacaoModel.Importacao.retornaImportacoes(None)
+
+    return render_template("consultaEnderecoEmLote.html", logs = Logs)
 
 @app.route('/consultaEnderecoEmLote', methods=['POST'])
 def importaEnderecoEmLote():
@@ -370,7 +371,7 @@ def importaEnderecoEmLote():
             
         importacaoModel.Importacao.registraLogEnderecoImportacao(None, location, saida["retorno"])
 
-    return ""
+    return redirect(url_for('consultaEnderecoEmLote'))
     
     
 ## INICIA A APLICAÇÃO 
