@@ -39,3 +39,5 @@ class Torre:
         cursor.execute(f"INSERT INTO LOG_CONSULTA_ENDERECO (LOCALIZACAO, RETORNO, DATA_CONSULTA) VALUES ('{localizacao}','{retorno}', NOW())")
         conexao.commit()
         return True
+
+

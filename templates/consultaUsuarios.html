@@ -22,10 +22,17 @@
                             <td scope="row">{{ u }}</td>
                         {% endfor %}
                         <td>
+<<<<<<< HEAD
                             <a class="button is-warning" href="{{url_for('paginaAlteraUsuario', usuario=usuario[0])}}">Alterar</a>
                         </td>
                         <td>
                             <a class="button is-danger" >Apagar</a>
+=======
+                            <a class="button is-warning" href="">Alterar</a>
+                        </td>
+                        <td>
+                            <a class="button is-danger" href="{{url_for('excluirUsuario', usuario=usuario[0])}}">Apagar</a>
+>>>>>>> 1d19b31968a7f9367c316f396c5cb725445d09c0
                         </td>
                     </tr>
                 {% endfor %}

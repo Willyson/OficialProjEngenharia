@@ -6,7 +6,7 @@ from werkzeug.utils import secure_filename
 import os
 import csv, sys
 
-UPLOAD_FOLDER = '/app/uploads'
+
 ALLOWED_EXTENSIONS = set(['csv'])
 
 
@@ -82,6 +82,7 @@ def controllerCadastroUsuario():
     NovoUsuario = usuarioModel.Usuario(nome, email, senha, cpf, rg, telefone, tipo, '1', usuarioEndereco)
 
     return NovoUsuario.validaDadosUsuario(NovoUsuario)
+<<<<<<< HEAD
     
 @app.route('/alterarUsuario', methods=['POST'])
 def controllerAlteraUsuario():
@@ -118,6 +119,8 @@ def controllerAlteraUsuario():
     
 
 
+=======
+>>>>>>> 1d19b31968a7f9367c316f396c5cb725445d09c0
 
 
 
@@ -125,7 +128,7 @@ def controllerAlteraUsuario():
 ## =======================
 ## REALIZA LOGIN 
 ## =======================
-tipoUsuario = ""
+
 
 @app.route('/login', methods=['POST'])
 def loginUsuario():
@@ -139,10 +142,11 @@ def loginUsuario():
     userLogin.criaUsuarioLogin(email, senha)
 
     usuario = userLogin.consultaUsuario(userLogin)
-    tipoUsuario = usuario[0][6]
+
+    session['tipoUsuario'] = usuario[0][6]
 
     if(len(usuario) > 0):
-        return render_template('menu.html', tu = tipoUsuario)
+        return render_template('menu.html', tu = session['tipoUsuario'])
     else:
          return redirect('/')
 
@@ -346,7 +350,7 @@ def importaEnderecoEmLote():
     # Registra o log de importacao 
     importacaoModel.Importacao.registraImportacao(None, arquivo.filename)
 
-    saida2 = ""
+ 
 
 
     # Recebe as torres 
@@ -409,7 +413,16 @@ def importaEnderecoEmLote():
 
     return redirect(url_for('consultaEnderecoEmLote'))
     
+## ================
+## Excluir usuário
+## ================
+@app.route('/excluirUsuario')
+def excluirUsuario():
+    u = request.args.get('usuario')
+    return usuarioModel.Usuario.removeUsuario(None,u)
     
+
+
 ## INICIA A APLICAÇÃO 
 if __name__ == '__main__':
     app.run(debug=True)
