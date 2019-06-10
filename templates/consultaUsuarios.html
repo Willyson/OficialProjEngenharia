@@ -19,17 +19,13 @@
                 {% for usuario in usuarios %}
                     <tr class="body-table">
                         {% for u in usuario %}
-                            {% if usuario[0] %}
-                                <td scope="row">{{ u }}</td>
-                            {% else %}
-                                <td><input type="text" value="{{ u }}" class="form-control"></td>
-                            {% endif %}
+                            <td scope="row">{{ u }}</td>
                         {% endfor %}
-                            <td>
-                                <a class="button is-warning">Alterar</a>
-                            </td>
                         <td>
-                            <a class="button is-danger">Apagar</a>
+                            <a class="button is-warning" href="{{url_for('paginaAlteraUsuario', usuario=usuario[0])}}">Alterar</a>
+                        </td>
+                        <td>
+                            <a class="button is-danger" >Apagar</a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -86,4 +82,48 @@
     </div>
 </div>
 </div>
+
+<div class="modal fade bd-example-modal-lg" id="modal2" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            
+            <div class="modal-header">
+                <h5>Preencha as informações a baixo</h5>
+            </div>
+    
+            <div class="modal-body">
+                <form method="POST" action="{{url_for('controllerAlteraUsuario')}}">
+                    <div class="form-group">
+                            <input type="text" placeholder="Nome" name="nome" class="form-control"  />
+    
+                            <input type="text" placeholder="CPF" name="cpf" maxlength="11" onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="form-control">
+    
+                        
+                            <input type="text" placeholder="RG" name="rg" class="form-control"/>
+                        
+    
+                            <input type="text" placeholder="Email" name="email" class="form-control"/>
+                            <input type="password" placeholder="Senha" name="senha" class="form-control"/>
+                            <input type="text" placeholder="Telefone" name="telefone" class="form-control"/>
+    
+                            <input type="text" placeholder="CEP" name="cep" class="form-control" />
+                            <input type="text" placeholder="Bairro" name="bairro" class="form-control" />
+                            <input type="text" placeholder="Cidade" name="cidade" class="form-control" />
+                            <input type="text" placeholder="UF" name="uf" class="form-control" />
+                            <select class="form-control" name="tipo">
+                                    <option value="1">Administrador</option>
+                                    <option value="2">Comum</option>
+                                </select>
+                    </div>
+                
+            </div>
+    
+            <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <input type="submit" class="btn btn-primary" value="Atualizar">
+            </div>
+            </form>
+        </div>
+    </div>
+    </div>
 {% endblock %}

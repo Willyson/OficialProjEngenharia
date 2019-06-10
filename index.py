@@ -36,7 +36,10 @@ def paginaCadastroUsuario():
     return render_template('cadastro.html')
 
 
-
+@app.route('/altera')
+def paginaAlteraUsuario():
+    u = usuarioModel.Usuario()
+    return render_template('alteraUsuario.html', usuarioAlterado = u.buscaUsuario(request.args.get('usuario')), usuario = request.args.get('usuario'))
 
 
 
@@ -80,6 +83,39 @@ def controllerCadastroUsuario():
 
     return NovoUsuario.validaDadosUsuario(NovoUsuario)
     
+@app.route('/alterarUsuario', methods=['POST'])
+def controllerAlteraUsuario():
+
+    ## ==================================================
+    ## Recupera dados do formulário 
+    ## ==================================================
+
+    nome = request.form.get('nome')
+    email = request.form.get('email')
+    senha = request.form.get('senha')
+    cpf = request.form.get('cpf')
+    tipo = request.form.get('tipo')
+    rg = request.form.get('rg')
+
+    ## =====================
+    ## Endereço do usuário
+    ## =====================
+
+    cep = request.form.get('cep')
+    bairro = request.form.get('bairro')
+    cidade = request.form.get('cidade')
+    uf = request.form.get('uf')
+
+    usuarioEndereco = enderecoModel.Endereco(cep, bairro, cidade, uf)
+
+    # ## =================
+    # ## Cria novo usuário
+    # ## =================
+
+    usuarioAlterado = usuarioModel.Usuario(nome, email, senha, cpf, rg, "", tipo, '1', usuarioEndereco)
+
+    return usuarioAlterado.alteraUsuario(usuarioAlterado, request.args.get('id_usuario'))
+    
 
 
 
@@ -119,7 +155,7 @@ def loginUsuario():
 
 @app.route('/home')
 def homeLogin():
-    return render_template('home.html')
+    return render_template('menu.html')
 
 
 
