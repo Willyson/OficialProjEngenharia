@@ -82,7 +82,6 @@ def controllerCadastroUsuario():
     NovoUsuario = usuarioModel.Usuario(nome, email, senha, cpf, rg, telefone, tipo, '1', usuarioEndereco)
 
     return NovoUsuario.validaDadosUsuario(NovoUsuario)
-<<<<<<< HEAD
     
 @app.route('/alterarUsuario', methods=['POST'])
 def controllerAlteraUsuario():
@@ -119,8 +118,6 @@ def controllerAlteraUsuario():
     
 
 
-=======
->>>>>>> 1d19b31968a7f9367c316f396c5cb725445d09c0
 
 
 
