@@ -19,17 +19,13 @@
                 {% for usuario in usuarios %}
                     <tr class="body-table">
                         {% for u in usuario %}
-                            {% if usuario[0] %}
-                                <td scope="row">{{ u }}</td>
-                            {% else %}
-                                <td><input type="text" value="{{ u }}" class="form-control"></td>
-                            {% endif %}
+                            <td scope="row">{{ u }}</td>
                         {% endfor %}
-                            <td>
-                                <a class="button is-warning">Alterar</a>
-                            </td>
                         <td>
-                            <a class="button is-danger">Apagar</a>
+                            <a class="button is-warning" href="">Alterar</a>
+                        </td>
+                        <td>
+                            <a class="button is-danger" href="{{url_for('excluirUsuario', usuario=usuario[0])}}">Apagar</a>
                         </td>
                     </tr>
                 {% endfor %}

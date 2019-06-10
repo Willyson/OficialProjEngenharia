@@ -126,4 +126,14 @@ class Usuario:
         return users 
 
 
-   
+   # ===============
+   # Remove usuário
+   # ===============
+
+    def removeUsuario(self, idUsuario):
+        conexao = novaConexao(self)
+        cursor = conexao.cursor()
+        cursor.execute(f"DELETE FROM ENDERECO WHERE ID_USUARIO = {idUsuario}")
+        cursor.execute(f"DELETE FROM USUARIO WHERE ID_USUARIO = {idUsuario}")
+        conexao.commit()
+        return redirect('consultaUsuarios')

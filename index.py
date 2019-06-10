@@ -6,7 +6,7 @@ from werkzeug.utils import secure_filename
 import os
 import csv, sys
 
-UPLOAD_FOLDER = '/app/uploads'
+
 ALLOWED_EXTENSIONS = set(['csv'])
 
 
@@ -371,7 +371,16 @@ def importaEnderecoEmLote():
 
     return redirect(url_for('consultaEnderecoEmLote'))
     
+## ================
+## Excluir usuário
+## ================
+@app.route('/excluirUsuario')
+def excluirUsuario():
+    u = request.args.get('usuario')
+    return usuarioModel.Usuario.removeUsuario(None,u)
     
+
+
 ## INICIA A APLICAÇÃO 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -18,9 +18,6 @@
                         <a href="{{url_for('homeLogin')}}" class="nav-link active">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{url_for('consultaUsuarios')}}" class="nav-link active">Usuário</a>
-                    </li>
-                    <li class="nav-item">
                             <a href="{{url_for('consultaEndereco')}}" class="nav-link active">Consulta Endereço</a>
                     </li>
                     <li class="nav-item">
@@ -28,13 +25,12 @@
                     </li>
                     {% if session['tipoUsuario'] == "Administrador" %}
                         <li class="nav-item">
-                            <a href="{{url_for('consultaTorresSites')}}" class="nav-link active">Torres</a>
+                            <a href="{{url_for('consultaUsuarios')}}" class="nav-link active">Usuário</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link active">Relatórios</a>
+                            <a href="{{url_for('consultaTorresSites')}}" class="nav-link active">Torres</a>
                         </li>
                     {% endif %}
-                    
                     <div class="navbar-end">
                         <div class="navbar-item">
                         <div class="buttons">

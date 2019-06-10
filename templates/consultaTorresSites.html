@@ -18,20 +18,17 @@
                     <th scope="col">UF</th>
                     <th scope="col">Status</th>
                     <th scope="col">Alterar</th>
-                    <th scope="col">Remover</th>
                 </tr>
             </thead>
         <tbody>        
             {% for torre in torres %}
                 <tr>
                     {% for linha in torre %}
-                        {% if linha[0] or linha[4] %}
-                            <th scope="row">{{ linha }}</th>
-                        {% else %}
-                            <td><input type="text" value="{{ linha }}" class="form-control" readonly></td>
-                        {% endif %}
+                        <td>{{ linha }}</td>
                     {% endfor %}
-                    <td>A</td><td>E</td>
+                    <td>
+                        <a class="button is-warning" value="{{torre[0]}}">Alterar</a>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
