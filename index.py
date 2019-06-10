@@ -60,7 +60,6 @@ def controllerCadastroUsuario():
     email = request.form.get('email')
     senha = request.form.get('senha')
     cpf = request.form.get('cpf')
-    telefone = request.form.get('telefone')
     tipo = request.form.get('tipo')
     rg = request.form.get('rg')
 
@@ -79,7 +78,7 @@ def controllerCadastroUsuario():
     # ## Cria novo usuário
     # ## =================
 
-    NovoUsuario = usuarioModel.Usuario(nome, email, senha, cpf, rg, telefone, tipo, '1', usuarioEndereco)
+    NovoUsuario = usuarioModel.Usuario(nome, email, senha, cpf, rg, "", tipo, '1', usuarioEndereco)
 
     return NovoUsuario.validaDadosUsuario(NovoUsuario)
     
@@ -256,7 +255,12 @@ def retornaLocalizacao():
 
     # Recebe a informação do formulário de pesquisa
     geolocator = GoogleV3(api_key='AIzaSyDLxvmCIqDmidp84dgKwXemApra3XtUhUE')
-    location = geolocator.geocode(str(request.form.get('enderecoPesquisa')))
+    endereco = str(request.form.get('enderecoPesquisa'))
+    if len(endereco) == 9:
+        endereco = endereco.replace('-', '')
+    location = geolocator.geocode(endereco)
+    if location == None:
+        return redirect(url_for('consultaEndereco'))
     
     # Recebe as torres 
     tower = torreModel.Torre().retornaTorresPesquisaEnd()
