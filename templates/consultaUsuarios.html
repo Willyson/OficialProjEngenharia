@@ -25,7 +25,7 @@
                             <a class="button is-warning" href="{{url_for('paginaAlteraUsuario', usuario=usuario[0])}}">Alterar</a>
                         </td>
                         <td>
-                            <a class="button is-danger" >Apagar</a>
+                            <a class="button is-danger" href="{{url_for('excluirUsuario', usuario=usuario[0])}}">Apagar</a>
                         </td>
                     </tr>
                 {% endfor %}
