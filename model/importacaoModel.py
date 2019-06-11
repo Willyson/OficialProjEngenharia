@@ -1,7 +1,7 @@
 import mysql.connector
 
 def novaConexao(self):
-        return mysql.connector.connect(user='root', password='root', host='127.0.0.1', database='DB_LOCALIZA', auth_plugin='mysql_native_password')
+        return mysql.connector.connect(user='mercado', password='mercado', host='127.0.0.1', database='DB_LOCALIZA', auth_plugin='mysql_native_password')
 
 class Importacao:
 
@@ -35,7 +35,11 @@ class Importacao:
 
     # Retorna as importações do lote 
     def retornaImportacoes(self):
-        return ""
+        conexao = novaConexao(self)
+        cursor =  conexao.cursor()
+        cursor.execute(f"SELECT * FROM VW_CONSULTA_IMPORTACOES")
+        logs = cursor.fetchall()
+        return logs
 
     # Retorna endereços das importações
     

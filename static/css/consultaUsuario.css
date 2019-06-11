@@ -36,6 +36,14 @@ td{
     z-index: 10000;
 }
 
+.modal2{
+    z-index: 10000;
+}
+
+.modal2-dialog{
+    z-index: 10000;
+}
+
 .formConsulta{
     margin-top: 5%;
     display: flex;

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Cadastra-se!</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	</head>
+	<style>
+			.row{
+				margin:1em;
+			}
+	</style>
+
+	<body class="bg-light">
+        {% block content %}
+		<div class="container">
+
+			<form class="login-form" method="POST" action="{{url_for('controllerAlteraUsuario', id_usuario = usuario)}}">
+				<div class="form-group">
+
+					<div class="row">
+						<div class="col">
+							<input type="text" placeholder="Nome" name="nome" class="form-control" value="{{usuarioAlterado.getNome()}}"  />
+						</div>	
+					</div>
+					
+					<div class="row">
+						<div class="col">
+							<input type="text" placeholder="CPF" name="cpf" maxlength="11" onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="form-control" value="{{usuarioAlterado.getCpf()}}"/>
+						</div>
+						<div class="col">
+							<input type="text" placeholder="RG" name="rg" class="form-control" value="{{usuarioAlterado.getRg()}}"/>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col">
+							<input type="text" placeholder="Email" name="email" class="form-control" value="{{usuarioAlterado.getEmail()}}"/>
+						</div>
+						<div class="col">
+							<input type="password" placeholder="Senha" name="senha" class="form-control" value="{{usuarioAlterado.getSenha()}}"/>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col">
+							<input type="text" placeholder="CEP" name="cep" class="form-control" value="{{usuarioAlterado.enderecoUsuario.getCep()}}"/>
+						</div>
+						<div class="col">
+							<input type="text" placeholder="Bairro" name="bairro" class="form-control" value="{{usuarioAlterado.enderecoUsuario.getBairro()}}"/>
+						</div>
+						<div class="col">
+							<input type="text" placeholder="Cidade" name="cidade" class="form-control" value="{{usuarioAlterado.enderecoUsuario.getCidade()}}"/>
+						</div>
+						<div class="col">
+							<input type="text" placeholder="UF" name="uf" class="form-control" maxlength="2" value="{{usuarioAlterado.enderecoUsuario.getUf()}}"/>
+						</div>
+					</div>
+
+
+					<div class="row">
+						<div class="col">
+							<select class="form-control" name="tipo">
+								<option value="1">Administrador</option>
+								<option value="2">Comum</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col">
+							<input type="submit" value="Alterar" id="btnEnviar" class="btn btn-primary btn-lg btn-block">
+						</div>
+					</div>	
+
+					</div>
+				</div>
+			</form>
+        </div>
+        {% endblock %}
+	</body>
+</html>

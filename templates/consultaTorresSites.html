@@ -1,84 +1,36 @@
-<!DOCTYPE HTML>
-<html>
-    <head>
-        <title>Consulta de Torres</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
-        <link rel="stylesheet" href="../static/css/consultaUsuario.css">
-    </head>
-    <body>
-        <div class="">
-            <ul class="navbar justify-content-center">
-                <li class="nav-item">
-                    <a href="{{url_for('homeLogin')}}" class="nav-link active">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{url_for('consultaUsuarios')}}" class="nav-link active">Usuário</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{url_for('consultaTorresSites')}}" class="nav-link active">Torres</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link active">Relatórios</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{url_for('consultaEndereco')}}" class="nav-link active">Consulta Endereço</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link active">Consulta Endereços em Lote</a>
-                </li>
-                <div class="navbar-end">
-                    <div class="navbar-item">
-                      <div class="buttons">
-                        <a href="{{url_for('index')}}" class="button is-primary">
-                          <strong>Sair</strong>
-                        </a>
-                      </div>
-                    </div>
-                </div>
-            </ul>
+{% extends "menu.html" %}       
+{% block body %} 
         
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">ID da Torre</th>
-                            <th scope="col">Longitude</th>
-                            <th scope="col">Latitude</th>
-                            <th scope="col">Altura</th>
-                            <th scope="col">ID da Antena</th>
-                            <th scope="col">Azimuth</th>
-                            <th scope="col">Mechanical</th>
-                            <th scope="col">Horizontal</th>
-                            <th scope="col">Vertical</th>
-                            <th scope="col">Cidade</th>
-                            <th scope="col">UF</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Alterar</th>
-                            <th scope="col">Remover</th>
-                        </tr>
-                    </thead>
-                <tbody>        
-                    {% for torre in torres %}
-                        <tr>
-                            {% for linha in torre %}
-                                {% if linha[0] or linha[4] %}
-                                    <th scope="row">{{ linha }}</th>
-                                {% else %}
-                                    <td><input type="text" value="{{ linha }}" class="form-control" readonly></td>
-                                {% endif %}
-                            {% endfor %}
-                            <td>A</td><td>E</td>
-                        </tr>
+<div class="table-responsive">
+    <table class="table table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">ID da Torre</th>
+                    <th scope="col">Longitude</th>
+                    <th scope="col">Latitude</th>
+                    <th scope="col">Altura</th>
+                    <th scope="col">ID da Antena</th>
+                    <th scope="col">Azimuth</th>
+                    <th scope="col">Mechanical</th>
+                    <th scope="col">Horizontal</th>
+                    <th scope="col">Vertical</th>
+                    <th scope="col">Cidade</th>
+                    <th scope="col">UF</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Alterar</th>
+                </tr>
+            </thead>
+        <tbody>        
+            {% for torre in torres %}
+                <tr>
+                    {% for linha in torre %}
+                        <td>{{ linha }}</td>
                     {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    </body>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-</html>
+                    <td>
+                        <a class="button is-warning" value="{{torre[0]}}">Alterar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}   

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect, session
 from model import usuarioModel, enderecoModel, torreModel, importacaoModel
 from geopy.geocoders import GoogleV3
 from math import radians, sin, cos, asin, sqrt, atan, degrees
@@ -6,12 +6,12 @@ from werkzeug.utils import secure_filename
 import os
 import csv, sys
 
-UPLOAD_FOLDER = '/app/uploads'
+
 ALLOWED_EXTENSIONS = set(['csv'])
 
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.secret_key = os.urandom(24)
 
 ## ====================================
 ## Página inicial para login do usuário
@@ -36,7 +36,10 @@ def paginaCadastroUsuario():
     return render_template('cadastro.html')
 
 
-
+@app.route('/altera')
+def paginaAlteraUsuario():
+    u = usuarioModel.Usuario()
+    return render_template('alteraUsuario.html', usuarioAlterado = u.buscaUsuario(request.args.get('usuario')), usuario = request.args.get('usuario'))
 
 
 
@@ -57,7 +60,6 @@ def controllerCadastroUsuario():
     email = request.form.get('email')
     senha = request.form.get('senha')
     cpf = request.form.get('cpf')
-    telefone = request.form.get('telefone')
     tipo = request.form.get('tipo')
     rg = request.form.get('rg')
 
@@ -76,9 +78,42 @@ def controllerCadastroUsuario():
     # ## Cria novo usuário
     # ## =================
 
-    NovoUsuario = usuarioModel.Usuario(nome, email, senha, cpf, rg, telefone, tipo, '1', usuarioEndereco)
+    NovoUsuario = usuarioModel.Usuario(nome, email, senha, cpf, rg, "", tipo, '1', usuarioEndereco)
 
     return NovoUsuario.validaDadosUsuario(NovoUsuario)
+    
+@app.route('/alterarUsuario', methods=['POST'])
+def controllerAlteraUsuario():
+
+    ## ==================================================
+    ## Recupera dados do formulário 
+    ## ==================================================
+
+    nome = request.form.get('nome')
+    email = request.form.get('email')
+    senha = request.form.get('senha')
+    cpf = request.form.get('cpf')
+    tipo = request.form.get('tipo')
+    rg = request.form.get('rg')
+
+    ## =====================
+    ## Endereço do usuário
+    ## =====================
+
+    cep = request.form.get('cep')
+    bairro = request.form.get('bairro')
+    cidade = request.form.get('cidade')
+    uf = request.form.get('uf')
+
+    usuarioEndereco = enderecoModel.Endereco(cep, bairro, cidade, uf)
+
+    # ## =================
+    # ## Cria novo usuário
+    # ## =================
+
+    usuarioAlterado = usuarioModel.Usuario(nome, email, senha, cpf, rg, "", tipo, '1', usuarioEndereco)
+
+    return usuarioAlterado.alteraUsuario(usuarioAlterado, request.args.get('id_usuario'))
     
 
 
@@ -89,6 +124,7 @@ def controllerCadastroUsuario():
 ## =======================
 ## REALIZA LOGIN 
 ## =======================
+
 
 @app.route('/login', methods=['POST'])
 def loginUsuario():
@@ -101,15 +137,14 @@ def loginUsuario():
     userLogin = usuarioModel.Usuario() 
     userLogin.criaUsuarioLogin(email, senha)
 
-    if(len(userLogin.consultaUsuario(userLogin)) > 0):
-         return redirect('/home')
+    usuario = userLogin.consultaUsuario(userLogin)
+
+    session['tipoUsuario'] = usuario[0][6]
+
+    if(len(usuario) > 0):
+        return render_template('menu.html', tu = session['tipoUsuario'])
     else:
          return redirect('/')
-
-
-
-
-
 
 
 
@@ -120,7 +155,7 @@ def loginUsuario():
 
 @app.route('/home')
 def homeLogin():
-    return render_template('home.html')
+    return render_template('menu.html')
 
 
 
@@ -220,7 +255,12 @@ def retornaLocalizacao():
 
     # Recebe a informação do formulário de pesquisa
     geolocator = GoogleV3(api_key='AIzaSyDLxvmCIqDmidp84dgKwXemApra3XtUhUE')
-    location = geolocator.geocode(str(request.form.get('enderecoPesquisa')))
+    endereco = str(request.form.get('enderecoPesquisa'))
+    if len(endereco) == 9:
+        endereco = endereco.replace('-', '')
+    location = geolocator.geocode(endereco)
+    if location == None:
+        return redirect(url_for('consultaEndereco'))
     
     # Recebe as torres 
     tower = torreModel.Torre().retornaTorresPesquisaEnd()
@@ -291,8 +331,10 @@ def retornaLocalizacao():
 
 @app.route('/consultaEnderecoEmLote')
 def consultaEnderecoEmLote():
-    
-    return render_template("consultaEnderecoEmLote.html")
+
+    Logs = importacaoModel.Importacao.retornaImportacoes(None)
+
+    return render_template("consultaEnderecoEmLote.html", logs = Logs)
 
 @app.route('/consultaEnderecoEmLote', methods=['POST'])
 def importaEnderecoEmLote():
@@ -309,7 +351,7 @@ def importaEnderecoEmLote():
     # Registra o log de importacao 
     importacaoModel.Importacao.registraImportacao(None, arquivo.filename)
 
-    saida2 = ""
+ 
 
 
     # Recebe as torres 
@@ -370,9 +412,18 @@ def importaEnderecoEmLote():
             
         importacaoModel.Importacao.registraLogEnderecoImportacao(None, location, saida["retorno"])
 
-    return ""
+    return redirect(url_for('consultaEnderecoEmLote'))
     
+## ================
+## Excluir usuário
+## ================
+@app.route('/excluirUsuario')
+def excluirUsuario():
+    u = request.args.get('usuario')
+    return usuarioModel.Usuario.removeUsuario(None,u)
     
+
+
 ## INICIA A APLICAÇÃO 
 if __name__ == '__main__':
     app.run(debug=True)

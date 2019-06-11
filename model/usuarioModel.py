@@ -2,9 +2,10 @@
 import mysql.connector
 
 from flask import redirect
+from .enderecoModel import Endereco
 
 def novaConexao(self):
-        return mysql.connector.connect(user='root', password='root', host='127.0.0.1', database='DB_LOCALIZA', auth_plugin='mysql_native_password')
+        return mysql.connector.connect(user='mercado', password='mercado', host='127.0.0.1', database='DB_LOCALIZA', auth_plugin='mysql_native_password')
 
 class Usuario:
 
@@ -104,6 +105,20 @@ class Usuario:
         else:
             return redirect('/')
 
+    def buscaUsuario(self, id_usuario):
+        conexao = novaConexao(self)
+        cursor = conexao.cursor()
+        cursor.execute(f'SELECT U.NOME_USUARIO, U.EMAIL_USUARIO, U.SENHA_USUARIO, U.CPF_USUARIO, U.RG_USUARIO, U.ID_TIPO_CONTA, U.STATUS_USUARIO, E.CEP_ENDERECO, E.BAIRRO_ENDERECO, E.CIDADE_ENDERECO, E.UF_ENDERECO FROM USUARIO AS U INNER JOIN ENDERECO AS E ON U.ID_USUARIO = E.ID_USUARIO WHERE U.ID_USUARIO={int(id_usuario)}')
+        usu = cursor.fetchall()
+        endereco = Endereco(usu[0][7], usu[0][8], usu[0][9], usu[0][10])
+        return Usuario(usu[0][0], usu[0][1], usu[0][2], usu[0][3], usu[0][4],"", usu[0][5], usu[0][6], endereco)
+
+    def alteraUsuario(self, usuarioAlterado, id_usuario):
+        conexao = novaConexao(self)
+        cursor = conexao.cursor()
+        cursor.execute(f'UPDATE USUARIO SET CPF_USUARIO="{usuarioAlterado.getCpf()}", NOME_USUARIO="{usuarioAlterado.getNome()}", RG_USUARIO="{usuarioAlterado.getRg()}", EMAIL_USUARIO="{usuarioAlterado.getEmail()}", SENHA_USUARIO="{usuarioAlterado.getSenha()}", STATUS_USUARIO="1", ID_TIPO_CONTA={usuarioAlterado.getTipo()} WHERE ID_USUARIO={id_usuario}')
+        conexao.commit()
+        return redirect('consultaUsuarios')
         
     #VERIFICA SE O USUÁRIO ESTÁ CADASTRADO NO SISTEMA 
     def consultaUsuario(self, usuarioLogin):
@@ -126,4 +141,14 @@ class Usuario:
         return users 
 
 
-   
+   # ===============
+   # Remove usuário
+   # ===============
+
+    def removeUsuario(self, idUsuario):
+        conexao = novaConexao(self)
+        cursor = conexao.cursor()
+        cursor.execute(f"DELETE FROM ENDERECO WHERE ID_USUARIO = {idUsuario}")
+        cursor.execute(f"DELETE FROM USUARIO WHERE ID_USUARIO = {idUsuario}")
+        conexao.commit()
+        return redirect('consultaUsuarios')
