@@ -5,7 +5,7 @@ from flask import redirect
 from .enderecoModel import Endereco
 
 def novaConexao(self):
-        return mysql.connector.connect(user='mercado', password='mercado', host='127.0.0.1', database='DB_LOCALIZA', auth_plugin='mysql_native_password')
+        return mysql.connector.connect(user='root', password='root', host='127.0.0.1', database='DB_LOCALIZA', auth_plugin='mysql_native_password')
 
 class Usuario:
 
